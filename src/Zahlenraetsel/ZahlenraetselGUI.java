@@ -26,6 +26,10 @@ public class ZahlenraetselGUI extends Application implements javafx.event.EventH
 	// Buttons, Labels, Textfields etc...
 	Button bSettingsContinue, bGameCheck, bRetry;
 	Label maxNumberShower, welcome;
+	
+	// H- and VBoxes
+	HBox hBoxLayout1, hBoxLayout2, hBoxLayout3, hBoxLayout4, hBoxLayout5;
+	VBox vBoxLayout1;
 
 	AppCode appcode = new AppCode();
 
@@ -37,62 +41,10 @@ public class ZahlenraetselGUI extends Application implements javafx.event.EventH
 	public void start(Stage stage) throws Exception {
 		window = stage;
 		window.setTitle("Zahlenraten - Einstellungen");
-
-		// Scene1
-		HBox hBoxLayout1 = new HBox(10);
-		hBoxLayout1.setAlignment(Pos.BASELINE_CENTER);
-		HBox hBoxLayout2 = new HBox(10);
-		hBoxLayout2.setAlignment(Pos.BASELINE_CENTER);
-		HBox hBoxLayout3 = new HBox(80);
-		hBoxLayout3.setAlignment(Pos.BASELINE_CENTER);
-		HBox hBoxLayout4 = new HBox(30);
-		hBoxLayout4.setAlignment(Pos.CENTER);
-
-		Label welcome = new Label("Herzlich Willkommen zum Zahlenraten!");
-		welcome.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
-		Label sliderShow = new Label("Zahlenspektrum 0 bis:");
-		Label sliderShow2 = new Label("Anzahl der Versuche");
-
-		Slider maxNumberSlider = new Slider(10, 100, 50);
-
-		Label maxNumberShower = new Label();
-		maxNumberShower.textProperty().bind(maxNumberSlider.valueProperty().asString());
-
-		Slider maxTriesSlider = new Slider(5, 15, 10);
-
-		Label maxTriesShower = new Label();
-		maxTriesShower.textProperty().bind(maxTriesSlider.valueProperty().asString());
-
-		Label tryShow = new Label("Versuche übrig: ");
-		Label tryShower = new Label();
-
-		TextField tipShower = new TextField();
-
-		Button bSettingsContinue = new Button("OK");
-		bSettingsContinue.setOnAction(e -> {
-			appcode.setMaxNumber((int) maxNumberSlider.getValue());
-			appcode.setTriesLeft((int) maxTriesSlider.getValue());
-			appcode.start();
-			tryShower.setText(appcode.getTriesLeftAsString());
-			tipShower.setText("Geben sie ihren ersten Tipp im Spektrum von 1 bis " + appcode.getMaxNumber() + " ab!");
-			window.setTitle("Zahlenraten - Das Spiel");
-			window.setScene(game);
-		});
-		Button bSettingsClose = new Button("Schließen");
-		bSettingsClose.setOnAction(e -> {
-			System.exit(0);
-		});
-
-		hBoxLayout1.getChildren().addAll(sliderShow, maxNumberShower);
-		hBoxLayout2.getChildren().addAll(sliderShow2, maxTriesShower);
-		hBoxLayout3.getChildren().addAll(bSettingsContinue, bSettingsClose);
-		hBoxLayout4.getChildren().add(welcome);
-
-		VBox overlay = new VBox(hBoxLayout4, hBoxLayout1, maxNumberSlider, hBoxLayout2, maxTriesSlider, hBoxLayout3);
-		overlay.setBackground(new Background(new BackgroundFill(Color.CADETBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
-		overlay.setSpacing(30);
-		settings = new Scene(overlay, 500, 300);
-
+		
+		//Scene1 - Settings
+		SettingsScene settingsScene = new SettingsScene();
+		
 		// Scene2
 		HBox hBoxLayout5 = new HBox(5);
 		hBoxLayout5.setAlignment(Pos.BASELINE_RIGHT);
@@ -106,7 +58,7 @@ public class ZahlenraetselGUI extends Application implements javafx.event.EventH
 
 		Button checkTip = new Button("Prüfe");
 		checkTip.setOnAction(e -> {
-			tipShower.setText(appcode.tipHigherLower(tipInput.getText()));
+			settingsScene.tipShower.setText(appcode.tipHigherLower(tipInput.getText()));
 			tryShower.setText(appcode.getTriesLeftAsString());
 			if (tipShower.getText().equals("Richtig!")) {
 				window.setScene(win);
